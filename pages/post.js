@@ -32,7 +32,7 @@ class Post extends Component {
               {({ data, loading, error }) => {
                   
                 if (loading) return <div>Loading</div>;
-                console.log("single", data);
+                // console.log("single", data);
             
 
                 return (

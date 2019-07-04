@@ -1,7 +1,7 @@
 import App from "../components/App";
 import Header from "../components/Header";
 import { Component } from "react";
-import { Mutation } from "react-apollo";
+import { Mutation, withApollo } from "react-apollo";
 import cookie from 'cookie'
 import gql from "graphql-tag";
 import Router from "next/router";
@@ -32,12 +32,18 @@ class index extends Component {
       pathname: "/allposts"
     });
   };
-  onClickSignOut = e => {
+  onClickSignOut = (apolloClient) => {
     this.setState({
       isLoggedIn: false
     })
     localStorage.removeItem('Token')
     localStorage.removeItem('User')
+    document.cookie = cookie.serialize("token", "", {
+      maxAge: -1 // Expire the cookie immediately
+    });
+    // Force a reload of all the current queries now that the user is
+    // logged in, so we don't accidentally leave any state around.
+    apolloClient.cache.reset()
   };
   componentDidMount() {
     
@@ -116,7 +122,7 @@ class index extends Component {
                 );
               }}
             </Mutation>
-            ) : <button onClick={e => {this.onClickSignOut(e)}}>Logout</button>}
+            ) : <button onClick={e => {this.onClickSignOut(this.props.client)}}>Logout</button>}
             
             {!this.state.isLoggedIn ? (
               <button onClick={e => this.onClickSignUp(e)}>Register</button>
@@ -131,4 +137,4 @@ class index extends Component {
   }
 }
 
-export default index;
+export default withApollo(index);

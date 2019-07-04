@@ -19,7 +19,7 @@ function PostList() {
       {({ data, loading, error }) => {
         if (error) return <ErrorMessage message="Error loading posts." />;
         if (loading) return <div>Loading</div>;
-        console.log('single', data)
+        // console.log('single', data)
         // console.log(data.posts);
         // const posts = data.posts.map((post, index) => {
         //   return (

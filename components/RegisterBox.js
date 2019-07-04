@@ -32,7 +32,7 @@ export default class RegisterBox extends Component {
 
   render() {
     const { email, name, age, password } = this.state;
-    console.log('state::', this.state);
+    // console.log('state::', this.state);
     const SIGN_UP = gql`
       mutation signUp($name: String!, $email: String!, $password: String!, $age: Int!){
         signUp(

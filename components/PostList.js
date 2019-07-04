@@ -23,7 +23,7 @@ export default function PostList() {
       {({ data, loading, error }) => {
         if (error) return <ErrorMessage message="Error loading posts." />;
         if (loading) return <div>Loading</div>;
-        // console.log(data.postsOfUser[0].posts);
+        console.log('post::', data.postsOfUser[0].posts);
         const posts = data.postsOfUser[0].posts.map((post, index) => {
           return (
             <li>

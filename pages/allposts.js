@@ -10,7 +10,7 @@ import checkLoggedIn from "../lib/checkLoggedIn";
 class AllPosts extends React.Component {
   static async getInitialProps(context, apolloClient) {
     const { loggedInUser } = await checkLoggedIn(context.apolloClient);
-    console.log("loggedInUser::", loggedInUser);
+    // console.log("loggedInUser::", loggedInUser);
 
     if (!loggedInUser.me) {
       // If not signed in, send them somewhere more useful
@@ -23,6 +23,7 @@ class AllPosts extends React.Component {
 
   signout = apolloClient => () => {
     localStorage.removeItem('Token')
+    localStorage.removeItem('User')
     document.cookie = cookie.serialize("token", "", {
       maxAge: -1 // Expire the cookie immediately
     });
@@ -36,15 +37,13 @@ class AllPosts extends React.Component {
   };
 
   render() {
-    // console.log(this.props.client);
-    // return null;
     return (
       <App>
           <Header />
             <div>
               Hello Test!
               <br />
-              {/* <PostList /> */}
+              <PostList />
               <button onClick={this.signout(this.props.client)}>Sign out</button>
             </div>
       </App>
