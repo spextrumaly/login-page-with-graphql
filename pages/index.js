@@ -10,9 +10,10 @@ import Router from "next/router";
 class index extends Component {
   state = {
     // eslint-disable-next-line no-undef
-    isLoggedIn: true,
+    isLoggedIn: false,
     email: "",
-    password: ""
+    password: "",
+    token: ""
   };
   onChangeEmail = e => {
     // console.log("onChangeEmail ::", e.target.value);
@@ -27,28 +28,54 @@ class index extends Component {
       pathname: "/register"
     });
   };
+  onClickSignOut = e => {
+    this.setState({
+      isLoggedIn: false
+    })
+    localStorage.removeItem('Token')
+    localStorage.removeItem('User')
+  };
+  componentDidMount() {
+    if (localStorage.getItem("Token") !== null) {
+      this.setState({
+        isLoggedIn: true
+      });
+    }
+  }
 
   render() {
     const { email, password } = this.state;
     const SIGN_IN = gql`
-    mutation signIn($email: String!, $password: String!){
-      signIn(
-        email: $email
-        password: $password
-      )
-    }
-  `;
+      mutation signIn($email: String!, $password: String!) {
+        signIn(email: $email, password: $password) {
+          token
+          user {
+            id
+            name
+          }
+        }
+      }
+    `;
+
     return (
       <App>
         <Header />
         <div className="form-field">
-          <div>
-            <label>
-              Email:
-              <input type="email" name="email" onChange={this.onChangeEmail} />
-            </label>
-          </div>
-          <div>
+          {!this.state.isLoggedIn ? (
+            <div>
+              <label>
+                Email:
+                <input
+                  type="email"
+                  name="email"
+                  onChange={this.onChangeEmail}
+                />
+              </label>
+            </div>
+          ) : <p>Hello, {JSON.parse(localStorage.getItem('User')).name}!</p>}
+
+          {!this.state.isLoggedIn ? (
+            <div>
             <label>
               Password:
               <input
@@ -58,19 +85,34 @@ class index extends Component {
               />
             </label>
           </div>
+          ) : <p>Thanks for using</p>}
           <div>
-            {/* <Link href="/register"> */}
-            <Mutation
+            {!this.state.isLoggedIn ? (
+              <Mutation
               mutation={SIGN_IN}
               variables={{ email, password }}
+              onCompleted={data => {
+                localStorage.setItem("Token", data.signIn.token);
+                localStorage.setItem("User", JSON.stringify(data.signIn.user));
+                console.log('userDat', localStorage.getItem('User'))
+                this.setState({
+                  isLoggedIn: true
+                })
+              }}
             >
-              {signIn => (
-                <button type="submit" onClick={signIn}>
-                  Login
-                </button>
-              )}
+              {signIn => {
+                return (
+                  <button type="submit" onClick={signIn}>
+                    Login
+                  </button>
+                );
+              }}
             </Mutation>
-            <button onClick={e => onClickSignUp(e)}>Register</button>
+            ) : <button onClick={e => {this.onClickSignOut(e)}}>Logout</button>}
+            
+            {!this.state.isLoggedIn ? (
+              <button onClick={e => this.onClickSignUp(e)}>Register</button>
+            ) : <p></p>}
             {/* </Link>  */}
           </div>
         </div>

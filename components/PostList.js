@@ -4,22 +4,27 @@ import ErrorMessage from "./ErrorMessage";
 import Link from "next/link";
 
 export const allPostsQuery = gql`
-  query {
-    posts {
-      id
-      title
-      UserId
+  query postsOfUser($id: ID!){
+    postsOfUser(id: $id) {
+      posts {
+        id
+        title
+        UserId
+      }
     }
   }
 `;
 export default function PostList() {
+  const userId = {
+    id: JSON.parse(localStorage.getItem('User')).id
+  }
   return (
-    <Query query={allPostsQuery}>
+    <Query query={allPostsQuery} variables={userId}>
       {({ data, loading, error }) => {
         if (error) return <ErrorMessage message="Error loading posts." />;
         if (loading) return <div>Loading</div>;
-        // console.log(data.posts);
-        const posts = data.posts.map((post, index) => {
+        // console.log(data.postsOfUser[0].posts);
+        const posts = data.postsOfUser[0].posts.map((post, index) => {
           return (
             <li>
               <Link as={`/post/${post.id}`} href={`/post?id=${post.id}`}>
@@ -31,6 +36,7 @@ export default function PostList() {
 
         return (
           <section>
+            <h3>Your posts:</h3>
             <ul>{posts}</ul>
             <style jsx>{`
               section {
