@@ -12,8 +12,8 @@ class index extends Component {
     isLoggedIn: false,
     email: "",
     password: "",
-    token: ""
   };
+
   onChangeEmail = e => {
     // console.log("onChangeEmail ::", e.target.value);
     this.setState({ email: e.target.value });
@@ -40,6 +40,7 @@ class index extends Component {
     localStorage.removeItem('User')
   };
   componentDidMount() {
+    
     if (localStorage.getItem("Token") !== null) {
       this.setState({
         isLoggedIn: true
