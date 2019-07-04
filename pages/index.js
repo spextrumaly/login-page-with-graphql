@@ -2,9 +2,8 @@ import App from "../components/App";
 import Header from "../components/Header";
 import { Component } from "react";
 import { Mutation } from "react-apollo";
+import cookie from 'cookie'
 import gql from "graphql-tag";
-import Link from "next/link";
-import PostList from "../components/PostList";
 import Router from "next/router";
 
 class index extends Component {
@@ -26,6 +25,11 @@ class index extends Component {
   onClickSignUp = e => {
     Router.push({
       pathname: "/register"
+    });
+  };
+  onClickPostButton = e => {
+    Router.push({
+      pathname: "/allposts"
     });
   };
   onClickSignOut = e => {
@@ -94,10 +98,13 @@ class index extends Component {
               onCompleted={data => {
                 localStorage.setItem("Token", data.signIn.token);
                 localStorage.setItem("User", JSON.stringify(data.signIn.user));
-                console.log('userDat', localStorage.getItem('User'))
                 this.setState({
                   isLoggedIn: true
                 })
+                document.cookie = cookie.serialize('token', data.signIn.token, {
+                  maxAge: 30 * 24 * 60 * 60 // 30 days
+                })
+                
               }}
             >
               {signIn => {
@@ -115,12 +122,9 @@ class index extends Component {
             ) : <p></p>}
             {/* </Link>  */}
           </div>
+          <button onClick={e => this.onClickPostButton(e)}>Posts</button>
         </div>
-        {this.state.isLoggedIn ? (
-          <PostList />
-        ) : (
-          <p>Please Login to see posts</p>
-        )}
+        
       </App>
     );
   }
