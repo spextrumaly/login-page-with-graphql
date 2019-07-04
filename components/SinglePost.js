@@ -1,37 +1,39 @@
 import { Query } from "react-apollo";
 import gql from "graphql-tag";
 import ErrorMessage from "./ErrorMessage";
-import Link from "next/link";
+import { withRouter } from 'next/router'
 
-export const allPostsQuery = gql`
-  query {
-    posts {
-      id
+export const singlePostQuery = gql`
+  query post($id: ID!) {
+    post(id: $id){
       title
       UserId
     }
   }
 `;
-export default function PostList() {
+
+
+function PostList() {
   return (
-    <Query query={allPostsQuery}>
+    <Query query={singlePostQuery} variables={this.props.router.query.id}>
       {({ data, loading, error }) => {
         if (error) return <ErrorMessage message="Error loading posts." />;
         if (loading) return <div>Loading</div>;
+        console.log('single', data)
         // console.log(data.posts);
-        const posts = data.posts.map((post, index) => {
-          return (
-            <li>
-              <Link as={`/post/${post.id}`} href={`/post?id=${post.id}`}>
-                <a>{post.title}</a>
-              </Link>
-            </li>
-          );
-        });
+        // const posts = data.posts.map((post, index) => {
+        //   return (
+        //     <li>
+        //       <Link href={`/post?id=${post.id}`}>
+        //         <a>{post.title}</a>
+        //       </Link>
+        //     </li>
+        //   );
+        // });
 
         return (
           <section>
-            <ul>{posts}</ul>
+            {/* <ul>{posts}</ul> */}
             <style jsx>{`
               section {
                 padding-bottom: 20px;
@@ -76,3 +78,4 @@ export default function PostList() {
     </Query>
   );
 }
+export default withRouter(PostList)
