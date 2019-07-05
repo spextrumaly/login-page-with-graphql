@@ -1,5 +1,6 @@
 import { Component } from "react";
 import gql from "graphql-tag";
+import redirect from '../lib/redirect'
 import { Mutation } from "react-apollo";
 
 export default class NewPostForm extends Component {
@@ -37,7 +38,13 @@ export default class NewPostForm extends Component {
         </div>
         <div>
           {/* <Link href="/register"> */}
-          <Mutation mutation={NEW_POST} variables={{ title, UserId }}>
+          <Mutation 
+            mutation={NEW_POST} 
+            variables={{ title, UserId }}
+            onCompleted={() => {
+              alert('Posted!!')
+              redirect({}, "/");
+            }}>
             {newPost => 
               <button type="submit" onClick={newPost}>
                 Submit

@@ -25,6 +25,9 @@ export default ({ children }) => (
         margin: 0 auto;
         max-width: 650px;
       }
+      button.deleteBtn {
+        background-color: red;
+    }
       button {
         align-items: center;
         background-color: #22bad9;
