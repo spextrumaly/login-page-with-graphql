@@ -30,6 +30,7 @@ export default class NewPostForm extends Component {
     return (
       <div className="form-field">
         {/* <form onSubmit={(e) => signUp(e)}> */}
+        <h3>New Post</h3>
         <div>
           <label>
             Title:
@@ -47,7 +48,7 @@ export default class NewPostForm extends Component {
             }}>
             {newPost => 
               <button type="submit" onClick={newPost}>
-                Submit
+                Post
               </button>
             }
           </Mutation>

@@ -57,13 +57,13 @@ export default class RegisterBox extends Component {
         <div>
           <label>
             Name:
-            <input type="text" name="email" onChange={this.onChangeName} />
+            <input type="text" name="name" onChange={this.onChangeName} />
           </label>
         </div>
         <div>
           <label>
             Age:
-            <input type="number" name="email" onChange={this.onChangeAge} />
+            <input type="number" name="age" onChange={this.onChangeAge} />
           </label>
         </div>
         <div>
