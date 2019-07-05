@@ -2,6 +2,7 @@ import React from "react";
 import cookie from "cookie";
 import { withApollo } from "react-apollo";
 import PostList from "../components/PostList";
+import NewPostForm from '../components/NewPostForm'
 import App from "../components/App";
 import Header from "../components/Header";
 import redirect from "../lib/redirect";
@@ -43,6 +44,8 @@ class AllPosts extends React.Component {
             <div>
               Hello Test!
               <br />
+              <br />
+              <NewPostForm />
               <PostList />
               <button onClick={this.signout(this.props.client)}>Sign out</button>
             </div>

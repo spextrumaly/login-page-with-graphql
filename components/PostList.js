@@ -1,10 +1,10 @@
-import { Query } from "react-apollo";
+import { Query, Subscription } from "react-apollo";
 import gql from "graphql-tag";
 import ErrorMessage from "./ErrorMessage";
 import Link from "next/link";
 
 export const allPostsQuery = gql`
-  query postsOfUser($id: ID!){
+  subscription postsOfUser($id: ID!){
     postsOfUser(id: $id) {
       posts {
         id
@@ -19,8 +19,10 @@ export default function PostList() {
     id: JSON.parse(localStorage.getItem('User')).id
   }
   return (
-    <Query query={allPostsQuery} variables={userId}>
+    <Subscription subscription={allPostsQuery} variables={userId}>
       {({ data, loading, error }) => {
+        console.log('data::', data);
+        console.log('loading::', loading);
         if (error) return <ErrorMessage message="Error loading posts." />;
         if (loading) return <div>Loading</div>;
         console.log('post::', data.postsOfUser[0].posts);
@@ -79,6 +81,6 @@ export default function PostList() {
           </section>
         );
       }}
-    </Query>
+    </Subscription>
   );
 }
