@@ -2,7 +2,7 @@ import App from "../components/App";
 import Header from "../components/Header";
 import { Component } from "react";
 import { Mutation, withApollo } from "react-apollo";
-import cookie from 'cookie'
+import cookie from "cookie";
 import gql from "graphql-tag";
 import Router from "next/router";
 
@@ -11,7 +11,7 @@ class index extends Component {
     // eslint-disable-next-line no-undef
     isLoggedIn: false,
     email: "",
-    password: "",
+    password: ""
   };
 
   onChangeEmail = e => {
@@ -32,21 +32,20 @@ class index extends Component {
       pathname: "/allposts"
     });
   };
-  onClickSignOut = (apolloClient) => {
+  onClickSignOut = apolloClient => {
     this.setState({
       isLoggedIn: false
-    })
-    localStorage.removeItem('Token')
-    localStorage.removeItem('User')
+    });
+    localStorage.removeItem("Token");
+    localStorage.removeItem("User");
     document.cookie = cookie.serialize("token", "", {
       maxAge: -1 // Expire the cookie immediately
     });
     // Force a reload of all the current queries now that the user is
     // logged in, so we don't accidentally leave any state around.
-    apolloClient.cache.reset()
+    apolloClient.cache.reset();
   };
   componentDidMount() {
-    
     if (localStorage.getItem("Token") !== null) {
       this.setState({
         isLoggedIn: true
@@ -83,55 +82,78 @@ class index extends Component {
                 />
               </label>
             </div>
-          ) : <p>Hello, {JSON.parse(localStorage.getItem('User')).name}!</p>}
+          ) : (
+            <p>Hello, {JSON.parse(localStorage.getItem("User")).name}!</p>
+          )}
 
           {!this.state.isLoggedIn ? (
             <div>
-            <label>
-              Password:
-              <input
-                type="password"
-                name="password"
-                onChange={this.onChangePassword}
-              />
-            </label>
-          </div>
-          ) : <p>Thanks for using</p>}
+              <label>
+                Password:
+                <input
+                  type="password"
+                  name="password"
+                  onChange={this.onChangePassword}
+                />
+              </label>
+            </div>
+          ) : (
+            <p>Thanks for using</p>
+          )}
           <div>
             {!this.state.isLoggedIn ? (
               <Mutation
-              mutation={SIGN_IN}
-              variables={{ email, password }}
-              onCompleted={data => {
-                localStorage.setItem("Token", data.signIn.token);
-                localStorage.setItem("User", JSON.stringify(data.signIn.user));
-                this.setState({
-                  isLoggedIn: true
-                })
-                document.cookie = cookie.serialize('token', data.signIn.token, {
-                  maxAge: 30 * 24 * 60 * 60 // 30 days
-                })
-                
-              }}
-            >
-              {signIn => {
-                return (
-                  <button type="submit" onClick={signIn}>
-                    Login
-                  </button>
-                );
-              }}
-            </Mutation>
-            ) : <button onClick={e => {this.onClickSignOut(this.props.client)}}>Logout</button>}
-            
+                mutation={SIGN_IN}
+                variables={{ email, password }}
+                onCompleted={data => {
+                  if (data.signIn !== null) {
+                    localStorage.setItem("Token", data.signIn.token);
+                    localStorage.setItem(
+                      "User",
+                      JSON.stringify(data.signIn.user)
+                    );
+                    this.setState({
+                      isLoggedIn: true
+                    });
+                    document.cookie = cookie.serialize(
+                      "token",
+                      data.signIn.token,
+                      {
+                        maxAge: 30 * 24 * 60 * 60 // 30 days
+                      }
+                    );
+                  } else {
+                    alert('Invalid email or password')
+                  }
+                }}
+              >
+                {signIn => {
+                  return (
+                    <button type="submit" onClick={signIn}>
+                      Login
+                    </button>
+                  );
+                }}
+              </Mutation>
+            ) : (
+              <button
+                onClick={e => {
+                  this.onClickSignOut(this.props.client);
+                }}
+              >
+                Logout
+              </button>
+            )}
+
             {!this.state.isLoggedIn ? (
               <button onClick={e => this.onClickSignUp(e)}>Register</button>
-            ) : <p></p>}
+            ) : (
+              <p></p>
+            )}
             {/* </Link>  */}
           </div>
           <button onClick={e => this.onClickPostButton(e)}>Posts</button>
         </div>
-        
       </App>
     );
   }

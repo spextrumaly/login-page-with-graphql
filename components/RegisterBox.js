@@ -1,6 +1,7 @@
 import { Component } from "react";
 import gql from "graphql-tag";
 import { Mutation } from "react-apollo";
+import redirect from "../lib/redirect";
 
 export default class RegisterBox extends Component {
   state = {
@@ -77,7 +78,17 @@ export default class RegisterBox extends Component {
         </div>
         <div>
           {/* <Link href="/register"> */}
-          <Mutation mutation={SIGN_UP} variables={{ email, name, age, password }}>
+          <Mutation 
+            mutation={SIGN_UP} 
+            variables={{ email, name, age, password }}
+            onCompleted={(data) => {
+              if (data !== null) {
+                alert('Success!!')
+                redirect({}, "/")
+              } else {
+                alert('Incorrect input!!')
+              }
+            }}>
             {signUp => 
               <button type="submit" onClick={signUp}>
                 Submit
