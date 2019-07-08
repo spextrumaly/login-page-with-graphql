@@ -47,25 +47,32 @@ export default class zimpleformtest extends Component {
             name="email"
             label="อีเมล์"
             placeholder="Email"
+            full
+            data-test="inputEmail"
             validate={combineValidators(
-              required("กรุณาใส่อีเมล"),
-              mustBeEmail("คุณใส่อีเมลไม่ถูกต้อง")
+              required("กรุณาใส่ email"),
+              mustBeEmail("คุณใส่ email ไม่ถูกต้อง")
             )}
           />
             <Form.Field
               type="password"
               name="password"
+              data-test="inputPassword"
               label="รหัสผ่าน"
+              full
               placeholder="Password"
               validate={required("กรุณาใส่รหัสผ่าน")}
             />
             <Form.Field
               type="password"
+              data-test="inputPasswordConfirm"
               name="confirmPassword"
               label="ยืนยันรหัสผ่าน"
+              full
               placeholder="Confirm Password"
             />
-          <Form.Submit btStyle="primary">SignUp</Form.Submit>
+          <Form.Submit btStyle="primary" data-test="btnSubmit">SignUp</Form.Submit>
+          
         </Form.Section>
       </Card>
     );
