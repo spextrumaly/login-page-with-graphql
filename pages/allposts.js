@@ -1,12 +1,12 @@
-import React from "react";
-import cookie from "cookie";
-import { withApollo } from "react-apollo";
-import PostList from "../components/PostList";
-import NewPostForm from '../components/NewPostForm'
-import App from "../components/App";
-import Header from "../components/Header";
-import redirect from "../lib/redirect";
-import checkLoggedIn from "../lib/checkLoggedIn";
+import React from 'react';
+import cookie from 'cookie';
+import { withApollo } from 'react-apollo';
+import PostList from '../components/PostList';
+import NewPostForm from '../components/NewPostForm';
+import App from '../components/App';
+import Header from '../components/Header';
+import redirect from '../lib/redirect';
+import checkLoggedIn from '../lib/checkLoggedIn';
 
 class AllPosts extends React.Component {
   static async getInitialProps(context, apolloClient) {
@@ -15,17 +15,17 @@ class AllPosts extends React.Component {
 
     if (!loggedInUser.me) {
       // If not signed in, send them somewhere more useful
-      alert('Please Login')
-      redirect(context, "/");
+      alert('Please Login');
+      redirect(context, '/');
     }
 
     return { loggedInUser };
   }
 
-  signout = apolloClient => () => {
-    localStorage.removeItem('Token')
-    localStorage.removeItem('User')
-    document.cookie = cookie.serialize("token", "", {
+  signout = (apolloClient) => () => {
+    localStorage.removeItem('Token');
+    localStorage.removeItem('User');
+    document.cookie = cookie.serialize('token', '', {
       maxAge: -1 // Expire the cookie immediately
     });
 
@@ -33,26 +33,25 @@ class AllPosts extends React.Component {
     // logged in, so we don't accidentally leave any state around.
     apolloClient.cache.reset().then(() => {
       // Redirect to a more useful page when signed out
-      redirect({}, "/");
+      redirect({}, '/');
     });
   };
 
   render() {
     return (
       <App>
-          <Header />
-            <div>
-              Hello Test!
-              <br />
-              <br />
-              <NewPostForm />
-              <PostList />
-              <button onClick={this.signout(this.props.client)}>Sign out</button>
-            </div>
+        <Header />
+        <div>
+          Hello Test!
+          <br />
+          <br />
+          <NewPostForm />
+          <PostList />
+          <button onClick={this.signout(this.props.client)}>Sign out</button>
+        </div>
       </App>
     );
   }
 }
 
-
-export default  withApollo(AllPosts)
+export default withApollo(AllPosts);
